@@ -1,7 +1,7 @@
 package com.jagsnet.minecraft.plugins.quests.otherStuff.messages;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 
 public class Strings {
     public static String colourIt(String s) {
@@ -36,9 +36,71 @@ public class Strings {
             s = s.replace("endermen", "enderman");
         }
         if (fixBlocks) {
-
+            s = s.replace("shelves", "shelf");
         }
         return s;
+    }
+
+    public static String getEntityType(Entity entity) {
+        String entityString = entity.getType().toString().replace("_", " ").toLowerCase();
+
+        String entityType = entity.getType().name();
+        switch (entityType) {
+            case "SHEEP":
+                Sheep sheep = (Sheep) entity;
+                entityString = sheep.getColor().name().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "COPPER_GOLEM":
+                CopperGolem copperGolem = (CopperGolem) entity;
+                entityString = copperGolem.getWeatheringState().name().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "PIG":
+                Pig pig = (Pig) entity;
+                entityString = pig.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "CAT":
+                Cat cat = (Cat) entity;
+                entityString = cat.getCatType().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "FROG":
+                Frog frog = (Frog) entity;
+                entityString = frog.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "WOLF":
+                Wolf wolf = (Wolf) entity;
+                entityString = wolf.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "HORSE":
+                Horse horse = (Horse) entity;
+                entityString = horse.getStyle().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "CHICKEN":
+                Chicken chicken = (Chicken) entity;
+                entityString = chicken.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "AXOLOTL":
+                Axolotl axolotl = (Axolotl) entity;
+                entityString = axolotl.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
+            case "SLIME":
+            case "MAGMA_CUBE":
+                Slime slime = (Slime) entity;
+                int size = slime.getSize();
+                switch (size) {
+                    case 1:
+                        entityString = "small " + entityString;
+                        break;
+                    case 2:
+                        entityString = "medium " + entityString;
+                        break;
+                    case 4:
+                        entityString = "large " + entityString;
+                        break;
+                }
+                break;
+        }
+
+        return entityString;
     }
 
     public static String cleanEntity(String s) {
@@ -46,6 +108,6 @@ public class Strings {
     }
 
     public static String questVersion(){
-        return "1.10";
+        return "1.11";
     }
 }

@@ -3,24 +3,25 @@ package com.jagsnet.minecraft.plugins.quests.commands;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Completion;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Configs;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 
-public class Completer implements CommandExecutor {
+public class Completer implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -245,5 +246,32 @@ public class Completer implements CommandExecutor {
             Messaging.sendMessage((Player) sender, "Please use a valid quests command");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            completions.add("txt");
+            completions.add("num");
+            completions.add("unlock");
+        }
+
+        if (args.length == 2) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                completions.add(p.getName());
+            }
+        }
+
+        if (args.length == 3) {
+            completions.add("<matcher1>");
+        }
+
+        if (args.length == 4) {
+            completions.add("<matcher2>");
+        }
+
+        return StringUtil.copyPartialMatches(args[args.length - 1], completions, new ArrayList<>());
     }
 }

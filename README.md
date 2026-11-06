@@ -404,8 +404,14 @@ The available biomes are any a player can be in. They must be the name of the bi
 ### Entities and Items
 Below you will see entity type and item type mentioned. Entity type is the full entity name without the underscores. So cave_spider would be cave spider. You can find the name of an entity by looking on the wiki or doing /summon in-game and having a look through to find the actual name. It’s the same for item type so stone_bricks would be stone bricks. I would also suggest checking each tracker before releasing your scroll to ensure it works.
 
+### Wild Mobs
+For mob based objectives you can add `wild` before the mob name to specify that it had to be naturally spawning and not coming from a spawner/command/etc.
+
+### Mob Types
+For most mobs that have sub types, like cats/horses/frogs/etc, you can specify their type before the mob name. For example you could have `Kill 10 Wild Ashen Wolves: 0`. This works for all objectives that support mobs.
+
 ### Wolves
-For breeding, taming and killing you can define wolves as wolves on the scroll even though their actual in game name is wolf. That way you don’t have to add “Tame 10 Wolfs: 0” and make your scroll look jank.
+For breeding, taming and killing you can define wolves as wolves on the scroll even though their actual in game name is wolf. That way you don’t have to add `Tame 10 Wolfs: 0` and make your scroll look jank.
 
 ### Formatting
 Always put a space after the : otherwise it will not work correctly. “Breed 10 Wolves: 0” and “Breed 10 Wolves:0” are not the same.
@@ -476,14 +482,16 @@ Deal 100 Damage To Zombies: 0
 ### Eating
 **Example:**
 ```
-Eat x <Item Type>: 0
+Eat x <itemType>: 0
 Eat 10 Apples: 0
+Eat x <itemName>: 0
+Eat 10 Red Bulls: 0
 ```
 
 ### Enchanting
 **Example:**
 ```
-Enchant x <Item Type>: 0
+Enchant x <itemType>: 0
 Enchant 10 Diamond Swords: 0
 ```
 
@@ -512,6 +520,9 @@ Custom mobs such as Berty need to be summoned with “CustomNameVisible:1” so 
 ```
 Kill x <Entity type>: 0
 Kill 10 Chickens: 0
+Kill 10 Wild Chickens: 0
+Kill 10 Wild Small Slimes: 0
+Kill 10 Blue Axolotls: 0
 Kill <EntityName>: Incomplete
 Kill Berty: Incomplete
 ```
@@ -608,6 +619,7 @@ Shear x <colour> Sheep: 0
 Shear x White Sheep: 0
 Shear x <mobType>: 0
 Shear x Cows: 0
+Shear x Wild Cows: 0
 ```
 
 ### Death
@@ -650,6 +662,7 @@ Fill x Buckets With [Lava|Water|Milk]: 0
 Catch x <mobType> In Buckets: 0
 Milk x <mobType>: 0
 Milk x Zombies: 0
+Milk x Wild Zombies: 0
 ```
 
 ### Coords
@@ -664,6 +677,38 @@ Go To X2 Y3 Z4: Incomplete
 ```
 Say “<someLine>”: Incomplete
 Say “Welcome back Noss!”: Incomplete
+```
+
+### Commands
+**Example:**
+```
+Execute the <command> Command: Incomplete
+Execute the /quest display Command: Incomplete
+Execute the /quest Command: Incomplete
+```
+
+### Shear Blocks
+**Example:**
+```
+Shear x <blockType>: 0
+Shear x Pumpkins: 0
+```
+
+### Dye Sheep
+**Example:**
+```
+Dye x <sheepType> <colour>: 0
+Dye x Sheep Purple: 0
+Dye x White Sheep Purple: 0
+Dye x Wild Sheep Purple: 0
+Dye x Wild White Sheep Purple: 0
+```
+
+### Composting
+**Example:**
+```
+Compost x <compostableItem>: 0
+Compost x Oak Saplings: 0
 ```
 
 ---
@@ -808,6 +853,16 @@ plugins
 ---
 
 # Changelog
+### 1.11
+- Added tab complete for all commands
+- Removed /wiki and /daddeve
+- Added the ability to specify mob types for most mobs and most mob based objectives
+- Added resolver so you can specify `shelves` instead of the block name which is `shelf`
+- Added composting objective
+- Added sheep dye objective
+- Added command objective
+- Made it so eat/drink objectives register custom item names so you can make an objective something like `Drink 10 Red Bulls: 0`
+- Added shearing for blocks that support it
 ### 1.10
 - Added the ability for a quest to display in the scoreboard slot. This can be managed by players using `/quest display`   
 - Added the `hiddenModifiers` option to allow you to attach modifiers that users cannot see   

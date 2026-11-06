@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 public class Strange implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
+//    public void onRight(PlayerInteractEntityEvent event) {
     public void onRight(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         if (event.getHand() == EquipmentSlot.OFF_HAND) return;
@@ -37,6 +38,7 @@ public class Strange implements Listener {
 
             String mainHandItem = event.getPlayer().getInventory().getItemInMainHand().getType().toString().toLowerCase();
             String entity = event.getRightClicked().getType().toString().toLowerCase();
+            String typedEntity = Strings.getEntityType(event.getRightClicked());
 
             if (mainHandItem.equalsIgnoreCase("bucket")) mainHandItem = "milk";
             if (mainHandItem.equals("milk") && player.getInventory().getItemInMainHand().getAmount() > 1) {
@@ -57,16 +59,24 @@ public class Strange implements Listener {
             for (int i = 0; i < lore.size(); i++) {
                 String line = Strings.cleanLore(lore.get(i), true, false);
                 if (    // all mobs
-                        (line.contains(mainHandItem) &&
-                        line.contains(" " + entity) &&
-                        line.split(" ", 0).length == entity.split(" ", 0).length + 3)
+                        (
+                            line.contains(mainHandItem) &&
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 3)
+                            )
+                        )
                         ||
                         // wild mobs
-                        (Completion.isWild(event.getRightClicked().getEntitySpawnReason()) &&
-                        line.contains(" wild ") &&
-                        line.contains(mainHandItem) &&
-                        line.contains(" " + entity) &&
-                        line.split(" ", 0).length == entity.split(" ", 0).length + 4)
+                        (
+                            Completion.isWild(event.getRightClicked().getEntitySpawnReason()) &&
+                            line.contains(" wild ") &&
+                            line.contains(mainHandItem) &&
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 4) ||
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 4)
+                            )
+                        )
                 ) {
                     if (Completion.updateNumLine(lore, player, 1, i)) {
                         if (mainHandItem.equalsIgnoreCase("milk") && entity.equalsIgnoreCase("cow")) return;
@@ -86,6 +96,7 @@ public class Strange implements Listener {
                                 player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1F, 1F);
                                 break;
                             case "milk":
+                                event.setCancelled(true);
                                 is  = new ItemStack(Material.MILK_BUCKET);
                                 im = is.getItemMeta();
                                 im.setDisplayName(b + WordUtils.capitalize(entity) + " Milk");

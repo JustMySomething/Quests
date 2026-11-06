@@ -25,6 +25,7 @@ public class DamageDone implements Listener {
                 if (Scroll.isScrollOff(player)) {
 
                     String entity = e.getEntity().getType().toString().replace("_", " ").toLowerCase();
+                    String typedEntity = Strings.getEntityType(event.getEntity());
                     ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
 
                     CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
@@ -41,10 +42,19 @@ public class DamageDone implements Listener {
                         }
 
                         // deal x damage to wild y
-                        if (line.contains(" wild ") && (line.contains(" " + entity) &&
-                                line.split(" ", 0).length == entity.split(" ").length + 6) &&
-                                (line.contains("damage") &&
-                                line.contains("deal"))) {
+                        if (
+                                line.contains(" wild ")
+                                &&
+                                (
+                                    (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ").length + 6) ||
+                                    (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 6)
+                                )
+                                &&
+                                (
+                                    line.contains("damage") &&
+                                    line.contains("deal")
+                                )
+                        ) {
                             if (Completion.isWild(spawnReason)) {
                                 if (Completion.updateNumLine(lore, player, (int) event.getFinalDamage(), i)) {
                                     return;
@@ -53,10 +63,17 @@ public class DamageDone implements Listener {
                         }
 
                         // deal x damage
-                        if ((line.contains(" " + entity) &&
-                                line.split(" ", 0).length == entity.split(" ").length + 5) &&
-                                (line.contains("damage") &&
-                                line.contains("deal"))) {
+                        if (
+                                (
+                                    (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ").length + 5) ||
+                                    (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 5)
+                                )
+                                &&
+                                (
+                                    line.contains("damage") &&
+                                    line.contains("deal")
+                                )
+                        ) {
                             if (Completion.updateNumLine(lore, player, (int) event.getFinalDamage(), i)) {
                                 return;
                             }

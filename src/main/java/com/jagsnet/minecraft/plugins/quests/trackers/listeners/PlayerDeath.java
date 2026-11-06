@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
@@ -23,7 +24,15 @@ public class PlayerDeath implements Listener {
                 entity = "fire";
             }
             if (entity.equalsIgnoreCase("contact")) {
-                entity = "cacti";
+                if(player.getLastDamageCause() instanceof EntityDamageByBlockEvent) {
+                    EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) player.getLastDamageCause();
+                    entity = blockEvent.getDamager().getType().toString().replace("_", " ").toLowerCase();
+                    if (entity.equals("cactus")) {
+                        entity = "cacti";
+                    }
+                } else {
+                    entity = "cacti";
+                }
             }
             if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) player.getLastDamageCause();

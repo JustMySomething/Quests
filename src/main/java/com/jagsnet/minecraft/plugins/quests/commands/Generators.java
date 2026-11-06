@@ -11,18 +11,21 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Generators implements CommandExecutor {
+public class Generators implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -37,7 +40,7 @@ public class Generators implements CommandExecutor {
         }
         if (args.length < 1) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "/gquest <fileName> <scrollName> <userName> [force|verbose]");
+                Messaging.sendMessage((Player) sender, "/gquest <fileName> <scrollName> <userName> [force | verbose]");
             } else { Messaging.log("Invalid quests command"); }
             return true;
         }
@@ -308,5 +311,36 @@ public class Generators implements CommandExecutor {
         }
         Messaging.sendMessage(player, "Please clear room in your inventory before trying to collect a quest scroll");
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            for (String fileName : Configs.getQuestConfigsNames()) {
+                completions.add(fileName);
+            }
+        }
+
+        if (args.length == 2) {
+            Set<String> questNames = Configs.getQuestNameMap().get(args[0]);
+            for (String questName : questNames) {
+                completions.add(questName);
+            }
+        }
+
+        if (args.length == 3) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                completions.add(p.getName());
+            }
+        }
+
+        if (args.length == 4) {
+            completions.add("force");
+            completions.add("verbose");
+        }
+
+        return StringUtil.copyPartialMatches(args[args.length - 1], completions, new ArrayList<>());
     }
 }

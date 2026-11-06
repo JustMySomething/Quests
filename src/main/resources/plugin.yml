@@ -18,15 +18,15 @@ commands:
   cquest:
     description: Base admin command for completing sections of the scroll.
     usage: /cquest
-  wiki:
-    description: Base wiki command
-    usage: /wiki
+#  wiki:
+#    description: Base wiki command
+#    usage: /wiki
   addeve:
     description: A Mystery... oooOOOOoooooOOOOOooooo.....
     usage: /addeve
-  daddeve:
-    description: Melon plugin help command.
-    usage: /daddeve
+#  daddeve:
+#    description: Melon plugin help command.
+#    usage: /daddeve
   melon:
     description: Melon special little playground.
     usage: /melon

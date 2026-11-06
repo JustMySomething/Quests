@@ -7,8 +7,60 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Configs {
+
+
+    private static List<String> questConfigsNames;
+    public static List<String> getQuestConfigsNames(){
+        return questConfigsNames;
+    }
+    public static void loadQuestConfigNames() {
+        Path folderPath = Paths.get(Bukkit.getServer().getPluginManager().getPlugin("Quests").getDataFolder().getPath());
+        try (Stream<Path> stream = Files.list(folderPath)) {
+            questConfigsNames = stream
+                    // Ensure it is a regular file (ignores subdirectories)
+                    .filter(Files::isRegularFile)
+                    // Get the file name as a string
+                    .map(Path::getFileName)
+                    .map(Path::toString)
+                    // Filter: Starts with a lowercase letter [a-z] and ends with .yml
+                    .filter(name -> name.matches("^[a-z].*\\.yml$"))
+                    // Map back to full Path objects if needed, or keep as Strings
+                    .map(name -> name.split("\\.")[0])
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Map<String, Set<String>> questNameMap = new HashMap<>();
+    public static Map<String, Set<String>> getQuestNameMap() {
+        return questNameMap;
+    }
+    public static void loadQuestNames(){
+        questNameMap = new HashMap<>();
+        File questFile;
+        FileConfiguration questConfig;
+        for (String questFileName : questConfigsNames) {
+            questFile = new File(Bukkit.getServer().getPluginManager().getPlugin("Quests").getDataFolder(), questFileName + ".yml");
+            questConfig = YamlConfiguration.loadConfiguration(questFile);
+            questNameMap.put(questFileName, questConfig.getKeys(false));
+        }
+    }
+
+
+    // CLASSIC CONFIG STUFF
+    // DONT TOUCH OR ILL CUT YOU
     private static File file2;
     private static FileConfiguration customFile2;
     // ----------------- Config file functions for lists --------------------

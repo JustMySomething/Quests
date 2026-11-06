@@ -21,7 +21,7 @@ public class Breeding implements Listener {
             if (Scroll.isScrollOff(player)) {
 
                 String entity = event.getEntityType().toString().replace("_", " ").toLowerCase();
-                int entitySize = entity.split(" ", 0).length;
+                String typedEntity = Strings.getEntityType(event.getEntity());
                 ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
 
                 CreatureSpawnEvent.SpawnReason mother = event.getMother().getEntitySpawnReason();
@@ -30,9 +30,16 @@ public class Breeding implements Listener {
                     String line = Strings.cleanLore(lore.get(i), true, false);
 
                     // wild mobs
-                    if (line.contains(" wild ") && line.contains(" " + entity) &&
-                            line.split(" ", 0).length == entitySize + 4 &&
-                            line.contains("breed")) {
+                    if (
+                            line.contains(" wild ")
+                            &&
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 4) ||
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 4)
+                            )
+                            &&
+                            line.contains("breed")
+                ) {
                         if (Completion.isWild(mother) && Completion.isWild(father)) {
                             if (Completion.updateNumLine(lore, player, 1, i)) {
                                 return;
@@ -41,9 +48,14 @@ public class Breeding implements Listener {
                     }
 
                     // all mobs
-                    if (line.contains(" " + entity) &&
-                            line.split(" ", 0).length == entitySize + 3 &&
-                            line.contains("breed")) {
+                    if (
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 3)
+                            )
+                            &&
+                            line.contains("breed")
+                    ) {
                         if (Completion.updateNumLine(lore, player, 1, i)) {
                             return;
                         }

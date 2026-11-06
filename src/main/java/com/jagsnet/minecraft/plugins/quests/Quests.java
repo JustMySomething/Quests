@@ -43,6 +43,9 @@ public final class Quests extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Chat(), this);
         getServer().getPluginManager().registerEvents(new MoveToOffhand(), this);
         getServer().getPluginManager().registerEvents(new Jumping(), this);
+        getServer().getPluginManager().registerEvents(new DyeSheep(), this);
+        getServer().getPluginManager().registerEvents(new Composting(), this);
+        getServer().getPluginManager().registerEvents(new ShearingBlocks(), this);
 
         // Schedule check for player movement
         BukkitScheduler scheduler = getServer().getScheduler();
@@ -86,14 +89,30 @@ public final class Quests extends JavaPlugin {
             public void run() { ScoreboardDisplay.showScoreboard(); }
         }, 6L, 100L);
 
+        scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() { ConfigLoader.reloadConfigs(); }
+        }, 7L, 100L);
+
         // Register commands for quests
         this.getCommand("quest").setExecutor(new Main());
+        this.getCommand("quest").setTabCompleter(new Main());
+
         this.getCommand("aquest").setExecutor(new Admin());
+        this.getCommand("aquest").setTabCompleter(new Admin());
+
         this.getCommand("gquest").setExecutor(new Generators());
+        this.getCommand("gquest").setTabCompleter(new Generators());
+
         this.getCommand("cquest").setExecutor(new Completer());
+        this.getCommand("cquest").setTabCompleter(new Completer());
+
         this.getCommand("addeve").setExecutor(new Main());
-        this.getCommand("daddeve").setExecutor(new Help());
+        this.getCommand("addeve").setTabCompleter(new Main());
+        //this.getCommand("daddeve").setExecutor(new Help());
+
         this.getCommand("melon").setExecutor(new Melon());
+        this.getCommand("melon").setTabCompleter(new Melon());
 
         // For using persistent data container, don't touch k thx
         instance = this;

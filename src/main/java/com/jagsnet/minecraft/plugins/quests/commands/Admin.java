@@ -9,23 +9,22 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.StringUtil;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
-public class Admin implements CommandExecutor {
+public class Admin implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -260,5 +259,43 @@ public class Admin implements CommandExecutor {
             Messaging.log("A player must run this command");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            completions.add("rewardList");
+            completions.add("expiry");
+            completions.add("claim");
+            completions.add("who");
+            completions.add("setWho");
+            completions.add("reloadList");
+            completions.add("version");
+            completions.add("auto");
+            completions.add("list");
+        }
+
+        if (args.length == 2 && args[0].equals("expiry")) {
+            completions.add("<expiryInMilliseconds>");
+        }
+
+        if (args.length == 2 && args[0].equals("setWho")) {
+            completions.add("<UUID>");
+        }
+
+        if (args.length == 2 && args[0].equals("auto")) {
+            completions.add("true");
+            completions.add("false");
+        }
+
+        if (args.length == 2 && args[0].equals("list")) {
+            for (String fileName : Configs.getQuestConfigsNames()) {
+                completions.add(fileName);
+            }
+        }
+
+        return StringUtil.copyPartialMatches(args[args.length - 1], completions, new ArrayList<>());
     }
 }

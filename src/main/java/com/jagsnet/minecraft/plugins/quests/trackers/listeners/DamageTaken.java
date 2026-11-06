@@ -23,11 +23,13 @@ public class DamageTaken implements Listener {
             if (Scroll.isScrollOff(player)) {
 
                 String entity;
+                String typedEntity = "";
                 ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
 
                 if (event instanceof EntityDamageByEntityEvent) {
                     EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
                     entity = e.getDamager().getType().toString().replace("_", " ").toLowerCase();
+                    typedEntity = Strings.getEntityType(event.getEntity());
                 } else {
                     entity = event.getCause().toString().replace("_", " ").toLowerCase();
                     if (entity.equalsIgnoreCase("fire tick")) {
@@ -48,10 +50,17 @@ public class DamageTaken implements Listener {
                         }
                     }
 
-                    if ((line.contains(" " + entity) &&
-                            line.split(" ", 0).length ==
-                            entity.split(" ").length + 5) &&
-                            (line.contains("damage") && line.contains("take"))) {
+                    if (
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ").length + 5) ||
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ").length + 5)
+                            )
+                            &&
+                            (
+                                line.contains("damage") &&
+                                line.contains("take")
+                            )
+                    ) {
                         if (Completion.updateNumLine(lore, player, (int) event.getFinalDamage(), i)) {
                             return;
                         }

@@ -27,7 +27,7 @@ public class Movement {
                     String line = Strings.cleanLore(lore.get(i), false, false);
                     if ((line.toLowerCase().contains("visit the " + entity.toLowerCase()) &&
                             (line.split(" ", 0).length == entity.split(" ", 0).length + 4)) &&
-                            !line.contains("Complete")) {
+                            !line.contains(" complete")) {
                         if (Completion.updateTxtLine(lore, p, i, true)) {
                         }
                     }

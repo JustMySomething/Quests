@@ -23,6 +23,7 @@ public class MobKills implements Listener {
             if (Scroll.isScrollOff(player)) {
                 
                 String entity = event.getEntity().getType().toString().replace("_", " ").toLowerCase();
+                String typedEntity = Strings.getEntityType(event.getEntity());
                 Boolean name = false;
                 if (event.getEntity().getCustomName() != null && event.getEntity().isCustomNameVisible()) {
                     entity = ChatColor.stripColor(event.getEntity().getCustomName()).toLowerCase();
@@ -54,9 +55,16 @@ public class MobKills implements Listener {
                         String line = Strings.cleanLore(lore.get(i), true, false);
 
                         // wild mobs
-                        if (line.contains(" wild ") && (line.contains(" " + entity) &&
-                                line.split(" ", 0).length ==
-                                        entity.split(" ", 0).length + 4)  && line.contains("kill")) {
+                        if (
+                                line.contains(" wild ")
+                                &&
+                                (
+                                    (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 4) ||
+                                    (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 4)
+                                )
+                                &&
+                                line.contains("kill")
+                        ) {
                             if (Completion.isWild(spawnReason)) {
                                 if (Completion.updateNumLine(lore, player, 1, i)) {
                                     return;
@@ -65,9 +73,14 @@ public class MobKills implements Listener {
                         }
 
                         // all mobs
-                        if ((line.contains(" " + entity) &&
-                                line.split(" ", 0).length ==
-                                entity.split(" ", 0).length + 3)  && line.contains("kill")) {
+                        if (
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 3)
+                            )
+                            &&
+                            line.contains("kill")
+                        ) {
                             if (Completion.updateNumLine(lore, player, 1, i)) {
                                 return;
                             }

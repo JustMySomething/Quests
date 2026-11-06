@@ -3,6 +3,7 @@ package com.jagsnet.minecraft.plugins.quests.trackers.listeners;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Completion;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,11 +23,19 @@ public class Eating implements Listener {
                 String entity = event.getItem().getType().toString().replace("_", " ").toLowerCase();
                 ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
 
+                String itemName = "whatthefuckmelon";
+                if (event.getItem().getItemMeta().hasDisplayName()) {
+                    itemName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName()).replace("_", " ").toLowerCase();
+                }
+
                 for (int i = 0; i < lore.size(); i++) {
                     String line = Strings.cleanLore(lore.get(i), false, true);
-                    if ((line.contains(" " + entity) &&
-                            line.split(" ", 0).length ==
-                            entity.split(" ", 0).length + 3) &&
+                    if (
+                            (
+                                (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
+                                (line.contains(" " + itemName) && line.split(" ", 0).length == itemName.split(" ", 0).length + 3)
+                            )
+                            &&
                             (line.contains("eat") || line.contains("drink"))) {
                         if (Completion.updateNumLine(lore, player, 1, i)) {
                             return;

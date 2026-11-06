@@ -7,10 +7,12 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static java.lang.Integer.parseInt;
 import static org.bukkit.Bukkit.getServer;
 
-public class Main implements CommandExecutor {
+public class Main implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -525,5 +527,31 @@ public class Main implements CommandExecutor {
             Messaging.log("A player must run this command");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            completions.add("help");
+            completions.add("claim");
+            completions.add("display");
+            completions.add("expiry");
+            completions.add("list");
+            completions.add("secret");
+        }
+
+        if (args.length == 2 && args[0].equals("display")) {
+            completions.add("full");
+            completions.add("compact");
+            completions.add("off");
+        }
+
+        if (args.length == 2 && args[0].equals("secret")) {
+            completions.add("<code>");
+        }
+
+        return StringUtil.copyPartialMatches(args[args.length - 1], completions, new ArrayList<>());
     }
 }
