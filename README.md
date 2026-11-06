@@ -863,6 +863,7 @@ plugins
 - Added command objective
 - Made it so eat/drink objectives register custom item names so you can make an objective something like `Drink 10 Red Bulls: 0`
 - Added shearing for blocks that support it
+- Fixed not being able to shift click craft at all while holding a scroll. Now it only stops it for craft objectives
 ### 1.10
 - Added the ability for a quest to display in the scoreboard slot. This can be managed by players using `/quest display`   
 - Added the `hiddenModifiers` option to allow you to attach modifiers that users cannot see   

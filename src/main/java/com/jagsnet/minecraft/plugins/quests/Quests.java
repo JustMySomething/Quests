@@ -46,6 +46,7 @@ public final class Quests extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DyeSheep(), this);
         getServer().getPluginManager().registerEvents(new Composting(), this);
         getServer().getPluginManager().registerEvents(new ShearingBlocks(), this);
+        getServer().getPluginManager().registerEvents(new HarvestBlock(), this);
 
         // Schedule check for player movement
         BukkitScheduler scheduler = getServer().getScheduler();

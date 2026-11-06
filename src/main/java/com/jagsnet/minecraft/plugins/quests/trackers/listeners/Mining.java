@@ -24,7 +24,13 @@ public class Mining implements Listener {
 
                 if(event.getBlock().getBlockData() instanceof Ageable) {
                     Ageable crop = (Ageable) event.getBlock().getBlockData();
-                    if (crop.getMaximumAge() != crop.getAge()) {
+                    if (
+                            crop.getMaximumAge() != crop.getAge()
+                            &&
+                            !crop.getMaterial().toString().equals("SUGAR_CANE")
+                            &&
+                            !crop.getMaterial().toString().equals("BAMBOO")
+                    ) {
                         return;
                     }
                 }

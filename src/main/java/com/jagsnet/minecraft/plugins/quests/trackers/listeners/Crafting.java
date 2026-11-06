@@ -24,16 +24,6 @@ public class Crafting implements Listener {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
             if (Scroll.isScrollOff(player)) {
-                if (event.isShiftClick()){
-                    Messaging.sendMessage(player, "You cannot shift click craft while using a quest. Sorry.");
-                    return;
-                }
-
-                if (event.getClick() == ClickType.NUMBER_KEY){
-                    Messaging.sendMessage(player, "You cannot use number keys to craft while using a quest. Sorry.");
-                    return;
-                }
-
 
                 if ((event.getCursor().getType() != Material.AIR) && (event.getCursor().getMaxStackSize() == event.getCursor().getAmount())) return;
                 if ((event.getCursor().getType() != event.getRecipe().getResult().getType()) && (event.getCursor().getType() != Material.AIR)) return;
@@ -49,36 +39,26 @@ public class Crafting implements Listener {
 
                 if ((stack.getAmount() + event.getCursor().getAmount()) > event.getCursor().getMaxStackSize()&& event.getCursor().getType() != Material.AIR) return;
 
-                /*
-                int itemsChecked = 0;
-                int possibleCreations = 1;
-                if (event.isShiftClick()) {
-                    for (ItemStack item : event.getInventory().getMatrix()) {
-                        if (item != null && !item.getType().equals(Material.AIR)) {
-                            System.out.println(item.toString());
-                            if (itemsChecked == 0)
-                                possibleCreations = item.getAmount();
-                            else
-                                possibleCreations = Math.min(possibleCreations, item.getAmount());
-                            itemsChecked++;
-                        }
-                    }
-                    int freeSpace = invSpace(player.getInventory(), event.getRecipe().getResult().getType());
-                    recipeAmount = event.getRecipe().getResult().getAmount() * possibleCreations;
-                    if (freeSpace < recipeAmount) {
-                        recipeAmount = freeSpace;
-                    }
-                }
-                Utils.sendMessage(player, String.valueOf(recipeAmount));
-                Utils.sendMessage(player, event.getCursor().getType().name());
-                 */
-
                 for (int i = 0; i < lore.size(); i++) {
                     String line = Strings.cleanLore(lore.get(i), false, true);
-                    if ((line.contains(" " + itemName) &&
-                            line.split(" ", 0).length ==
-                            itemName.split(" ", 0).length + 3) &&
-                            (line.contains("craft") || line.contains("make"))) {
+                    if (
+                            (line.contains(" " + itemName) && line.split(" ", 0).length == itemName.split(" ", 0).length + 3)
+                            &&
+                            (line.contains("craft") || line.contains("make"))
+                    ) {
+
+                        if (event.isShiftClick()){
+                            Messaging.sendMessage(player, "You cannot shift click craft while using a quest. Sorry.");
+                            event.setCancelled(true);
+                            return;
+                        }
+
+                        if (event.getClick() == ClickType.NUMBER_KEY){
+                            Messaging.sendMessage(player, "You cannot use number keys to craft while using a quest. Sorry.");
+                            event.setCancelled(true);
+                            return;
+                        }
+
                         if (Completion.updateNumLine(lore, player, recipeAmount, i)) {
                             return;
                         }
