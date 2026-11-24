@@ -34,13 +34,14 @@ public class Generators implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (!player.hasPermission("quests.admin")) {
-                Messaging.sendMessage(player, "You are missing quests admin permissions. Speak to Melon for more info");
+                Messaging.sendConfiguredMessage(player, "generatorMessages.missingPermissions");
                 return true;
             }
         }
         if (args.length < 1) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "/gquest <fileName> <scrollName> <userName> [force | verbose]");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.gquestHelpHeader", "helpHeaderMessage");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.gquestHelp", "helpMessage");
             } else { Messaging.log("Invalid quests command"); }
             return true;
         }
@@ -68,7 +69,7 @@ public class Generators implements CommandExecutor, TabCompleter {
         }
         if (args.length < 3) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Please specify a scroll name specified in the configs and a player to give it to");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.missingArgs");
             } else {
                 Messaging.log("Please specify a scroll name specified in the configs and a player to give it to");
             }
@@ -77,7 +78,7 @@ public class Generators implements CommandExecutor, TabCompleter {
         Player player = Bukkit.getPlayer(args[2]);
         if (player == null) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Please specify a player that is currently online");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.offlinePlayer");
             } else {
                 Messaging.log("Please specify a player that is currently online");
             }
@@ -85,7 +86,7 @@ public class Generators implements CommandExecutor, TabCompleter {
         }
         if (!player.isOnline()) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Please specify a player that is currently online");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.offlinePlayer");
             } else {
                 Messaging.log("Please specify a player that is currently online");
             }
@@ -94,19 +95,19 @@ public class Generators implements CommandExecutor, TabCompleter {
 
         if (player.hasPermission("quest." + args[0] + "_" + args[1]) && !force) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Player has already gotten one of these quests. Use [/gquest config quest playerName force] to give them another.");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.alreadyCollectedAdmin");
             } else {
                 Messaging.log("Player has already gotten one of these quests. Use [/gquest config quest playerName force] to give them another.");
             }
             if (verbose) {
-                Messaging.sendMessage(player, "You have already collected this quest. It has a " + Configs.get().getString(args[1] + ".permission") + " cooldown. Please wait until this is up.");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.alreadyCollectedAdminVerbose", "standardMessage", Configs.get().getString(args[1] + ".permission"));
             }
             return true;
         }
 
         if (Configs.get().getStringList(args[1] + ".lines") == null) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Number of lines for this scroll not specified");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.noLines");
             } else {
                 Messaging.log("Number of lines for this scroll not specified");
             }
@@ -114,7 +115,7 @@ public class Generators implements CommandExecutor, TabCompleter {
         }
         if (Configs.get().getStringList(args[1] + ".rewards") == null) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Reward not set for this scroll");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.noReward");
             } else {
                 Messaging.log("Reward not set for this scroll");
             }
@@ -122,7 +123,7 @@ public class Generators implements CommandExecutor, TabCompleter {
         }
         if (Configs.get().getString(args[1] + ".name") == null) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "Name not set for this scroll");
+                Messaging.sendConfiguredMessage((Player) sender, "generatorMessages.noName");
             } else {
                 Messaging.log("Name not set for this scroll");
             }
@@ -296,20 +297,19 @@ public class Generators implements CommandExecutor, TabCompleter {
                         String msgName = Configs.get().getString(args[1] + ".message.name");
                         String msgColour = Configs.get().getString(args[1] + ".message.colour");
                         for (int i = 0; i < messages.size(); i++) {
-                            Messaging.sendUnformattedMessage(player, ChatColor.valueOf(msgColour) + bold + msgName + " > " + white + messages.get(i).toString());
+                            Messaging.sendClassicFormattedMessage(player, ChatColor.valueOf(msgColour) + bold + msgName + " > " + white + messages.get(i).toString());
                         }
                     }
                 } else if (Configs.get().getString(args[1] + ".message") != null) {
-                    Messaging.sendMessage(player, Configs.get().getString(args[1] + ".message"));
+                    Messaging.sendMessage(player, Configs.get().getString(args[1] + ".message"), "unformattedMessage");
                 }
                 if (permission) {
                     Perms.setPerm(player.getName(), "quest." + args[0] + "_" + args[1], Configs.get().getString(args[1] + ".permission"));
-                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission settemp quest." + args[0] + "_" + args[1] + " true " + Configs.get().getString(args[1] + ".permission"));
                 }
                 return true;
             }
         }
-        Messaging.sendMessage(player, "Please clear room in your inventory before trying to collect a quest scroll");
+        Messaging.sendConfiguredMessage(player, "generatorMessages.noSpace");
         return false;
     }
 

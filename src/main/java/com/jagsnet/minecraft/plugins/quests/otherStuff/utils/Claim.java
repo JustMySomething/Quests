@@ -43,13 +43,13 @@ public class Claim {
                 }
             }
             if (count < rewardCount) {
-                Messaging.sendMessage(player, "Clear some inventory space before trying to claim your reward");
+                Messaging.sendConfiguredMessage(player, "claimingMessages.clearInventory");
                 return true;
             }
 
             if (!player.isOp()) {
                 if (player.hasPermission("quest.completed." + location) && !force) {
-                    Messaging.sendMessage(player, "You have already completed this quest. It has a " + Configs.get().getString(location.split("_")[1] + ".permission") + " cooldown. Please wait until this is up.");
+                    Messaging.sendConfiguredMessage(player, "claimingMessages.alreadyCompleted", "standardMessage", Configs.get().getString(location.split("_")[1] + ".permission"));
                     return true;
                 }
             }
@@ -72,7 +72,7 @@ public class Claim {
                 String msgName = Configs.get().getString(path + ".claimMessage.name");
                 String msgColour = Configs.get().getString(path + ".claimMessage.colour");
                 for (int i = 0; i < messages.size(); i++) {
-                    Messaging.sendUnformattedMessage(player, ChatColor.valueOf(msgColour) + bold + msgName + " > " + ChatColor.WHITE + messages.get(i).toString());
+                    Messaging.sendClassicFormattedMessage(player, ChatColor.valueOf(msgColour) + bold + msgName + " > " + ChatColor.WHITE + messages.get(i).toString());
                 }
             }
             for (int i = 0; rewards.size() > i; i++) {
@@ -102,7 +102,7 @@ public class Claim {
                 Messaging.log("Quests ran: " + rewardName);
             }
         } else {
-            Messaging.sendMessage(player, "Thats strange, there are no rewards for this quest scroll");
+            Messaging.sendConfiguredMessage(player, "claimingMessages.noReward");
             return true;
         }
         return true;

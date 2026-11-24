@@ -37,7 +37,7 @@ public class Scroll {
         }
         if (iM.getLore().get(0).contains("Quest Path") || iM.getLore().get(0).contains("Quest Scroll") || iM.getLore().get(0).contains("Tracker")) {
             if (i.getAmount() > 1) {
-                Messaging.sendMessage(p, "You may only use one quest scroll at a time");
+                Messaging.sendConfiguredMessage(p, "misc.questDouble");
                 return false;
             }
             NamespacedKey key = new NamespacedKey(Quests.getInstance(), "UUID");
@@ -45,7 +45,7 @@ public class Scroll {
                     && !p.hasPermission("quests.admin")) {
                 String UUID = iM.getPersistentDataContainer().get(key, PersistentDataType.STRING);
                 if (!UUID.equals(p.getUniqueId().toString())) {
-                    Messaging.sendMessage(p, "You may only use this scroll if it was assigned to you.");
+                    Messaging.sendConfiguredMessage(p, "misc.questWrongOwner");
                     return false;
                 }
             }

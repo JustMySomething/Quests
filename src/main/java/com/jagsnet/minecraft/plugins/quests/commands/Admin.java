@@ -2,6 +2,7 @@ package com.jagsnet.minecraft.plugins.quests.commands;
 
 import com.jagsnet.minecraft.plugins.quests.Quests;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Claim;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Configs;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
@@ -33,21 +34,12 @@ public class Admin implements CommandExecutor, TabCompleter {
 
             Player player = (Player) sender;
             if (!player.hasPermission("quests.admin")) {
-                Messaging.sendMessage(player, "You are missing quests admin permissions. Speak to Melon for more info");
+                Messaging.sendConfiguredMessage(player, "adminMessages.missingPermissions");
                 return true;
             }
             if (args.length < 1) {
-                Messaging.sendMessage(player, "/aquest rewardList");
-                Messaging.sendMessage(player, "/aquest expiry <expiryInMillis>");
-                Messaging.sendMessage(player, "/aquest claim");
-                Messaging.sendMessage(player, "/aquest who");
-                Messaging.sendMessage(player, "/aquest setWho <UUID>");
-                Messaging.sendMessage(player, "/aquest reloadList");
-                Messaging.sendMessage(player, "/aquest version");
-                Messaging.sendMessage(player, "/aquest auto");
-                Messaging.sendMessage(player, "/aquest auto [true|false]");
-                Messaging.sendMessage(player, "/aquest list");
-                Messaging.sendMessage(player, "/aquest list <fileName>");
+                Messaging.sendConfiguredMessage(player, "adminMessages.aquestHelpHeader", "helpHeaderMessage");
+                Messaging.sendConfiguredMessage(player, "adminMessages.aquestHelp", "helpMessage");
                 return true;
             }
             // ------------------------------------------------------
@@ -68,15 +60,15 @@ public class Admin implements CommandExecutor, TabCompleter {
                         Configs.load(location.split("_")[0]);
                         List rewards = Configs.get().getStringList( location.split("_")[1] + ".rewards");
                         int rewardCount = rewards.size();
-                        Messaging.sendMessage(player, rewardCount + " Rewards ------------------------");
+                        Messaging.sendConfiguredMessage(player, "adminMessages.rewardHeader", "standardMessage", String.valueOf(rewardCount));
                         for (int i = 0; i < rewardCount; i++) {
-                            Messaging.sendMessage(player, "/" + rewards.get(i).toString());
+                            Messaging.sendMessage(player, "/" + rewards.get(i).toString(), "helpMessage", "Reward " + String.valueOf(i));
                         }
                     } else {
-                        Messaging.sendMessage(player, "No rewards set for this item");
+                        Messaging.sendConfiguredMessage(player, "adminMessages.rewardMissing");
                     }
                 } else {
-                    Messaging.sendMessage(player, "Please hold a valid quest scroll");
+                    Messaging.sendConfiguredMessage(player, "adminMessages.invalidScroll");
                 }
                 return true;
             }
@@ -85,14 +77,14 @@ public class Admin implements CommandExecutor, TabCompleter {
             // ------------------------------------------------------
             if (args[0].equalsIgnoreCase("expiry")) {
                 if (args.length < 2) {
-                    Messaging.sendMessage(player, "Insufficient arguments. Please enter the command like /aQuest expiry <timeInMilliseconds>");
+                    Messaging.sendConfiguredMessage(player, "adminMessages.expiryNoMilli");
                     return true;
                 }
                 long expiry;
                 try {
                     expiry = parseLong(args[1]);
                 } catch (Exception e) {
-                    Messaging.sendMessage(player, "Please enter a valid time in milliseconds");
+                    Messaging.sendConfiguredMessage(player, "adminMessages.expiryInvalidMilli");
                     return true;
                 }
                 expiry = expiry + System.currentTimeMillis();
@@ -100,7 +92,7 @@ public class Admin implements CommandExecutor, TabCompleter {
                     ItemMeta mainHandItem = player.getInventory().getItemInMainHand().getItemMeta();
                     NamespacedKey key = new NamespacedKey(Quests.getInstance(), "expiry");
                     mainHandItem.getPersistentDataContainer().set(key, PersistentDataType.LONG, expiry);
-                    Messaging.sendMessage(player, "Expiry set for " + expiry + " milliseconds from now");
+                    Messaging.sendConfiguredMessage(player, "adminMessages.expirySet", "standardMessage", String.valueOf(expiry));
                     ItemStack itemStack = player.getInventory().getItemInMainHand();
                     itemStack.setItemMeta(mainHandItem);
                 }
@@ -111,7 +103,7 @@ public class Admin implements CommandExecutor, TabCompleter {
             // ------------------------------------------------------
             if (args[0].equalsIgnoreCase("monthly")) {
                 if (args.length < 4) {
-                    Messaging.sendMessage(player, "Insufficient arguments.");
+                    Messaging.sendMessage(player, "Insufficient arguments. Probably don't use this command anyway");
                     return true;
                 }
                 String out = "";
@@ -140,7 +132,7 @@ public class Admin implements CommandExecutor, TabCompleter {
                 if (Scroll.isScrollMain(player) || Scroll.isScrollOff(player)) {
                     return Claim.claim(player, false, ".rewards", false);
                 }
-                Messaging.sendMessage(player, "Please hold a valid quest scroll.");
+                Messaging.sendConfiguredMessage(player, "adminMessages.invalidScroll");
                 return true;
             }
             // ------------------------------------------------------
@@ -153,7 +145,7 @@ public class Admin implements CommandExecutor, TabCompleter {
                     if (mainHandItem.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
                         Messaging.sendMessage(player, Bukkit.getPlayer(UUID.fromString(mainHandItem.getPersistentDataContainer().get(key, PersistentDataType.STRING))).getDisplayName());
                     } else {
-                        Messaging.sendMessage(player, "Anyone can use this scroll");
+                        Messaging.sendConfiguredMessage(player, "adminMessages.whoAnyone");
                     }
                 }
                 return true;
@@ -164,7 +156,7 @@ public class Admin implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("setwho")) {
                 if (Scroll.isScrollMain(player)) {
                     if (args.length < 2) {
-                        Messaging.sendMessage(player, "Please specify a UUID like /aquest setwho 1234-5678-etc");
+                        Messaging.sendConfiguredMessage(player, "adminMessages.setWhoNoUUID");
                         return true;
                     }
                     ItemMeta mainHandItem = player.getInventory().getItemInMainHand().getItemMeta();
@@ -175,7 +167,7 @@ public class Admin implements CommandExecutor, TabCompleter {
                     if (mainHandItem.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
                         Messaging.sendMessage(player, Bukkit.getOfflinePlayer(UUID.fromString(mainHandItem.getPersistentDataContainer().get(key, PersistentDataType.STRING))).getName());
                     } else {
-                        Messaging.sendMessage(player, "Anyone can use this scroll");
+                        Messaging.sendConfiguredMessage(player, "adminMessages.whoAnyone");
                     }
                 }
                 return true;
@@ -185,14 +177,15 @@ public class Admin implements CommandExecutor, TabCompleter {
             // ------------------------------------------------------
             if (args[0].equalsIgnoreCase("reloadlist")) {
                 Configs.loadLists();
-                Messaging.sendMessage(player, "List reload complete.");
+                Messaging.sendConfiguredMessage(player, "adminMessages.reloadComplete");
                 return true;
             }
             // ------------------------------------------------------
             // ----------------- Quests Version Info ----------------
             // ------------------------------------------------------
             if (args[0].equalsIgnoreCase("version") || args[0].equalsIgnoreCase("help")) {
-                Messaging.sendVersion(player);
+                Messaging.sendMessage(player, "Quests - Created By MelonMarauda");
+                Messaging.sendMessage(player, "https://github.com/JustMySomething/Quests", "helpMessage", Strings.questVersion());
                 return true;
             }
             // ------------------------------------------------------
@@ -200,13 +193,13 @@ public class Admin implements CommandExecutor, TabCompleter {
             // ------------------------------------------------------
             if (args[0].equalsIgnoreCase("auto")) {
                 if (args.length < 2) {
-                    Messaging.sendMessage(player, "Autocomplete status: " + Quests.auto);
+                    Messaging.sendConfiguredMessage(player, "adminMessages.autoStatus", "standardMessage", String.valueOf(Quests.auto));
                     return true;
                 }
                 Configs.getGlobal().set("auto", Boolean.valueOf(args[1]));
                 Configs.saveGlobal();
                 Quests.setAuto();
-                Messaging.sendMessage(player, "Autocomplete status: " + Quests.auto);
+                Messaging.sendConfiguredMessage(player, "adminMessages.autoStatus", "standardMessage", String.valueOf(Quests.auto));
                 return true;
             }
 
@@ -236,9 +229,10 @@ public class Admin implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("list")) {
                 if (args.length < 2) {
                     File[] files = new File(String.valueOf(Bukkit.getServer().getPluginManager().getPlugin("Quests").getDataFolder())).listFiles();
+                    Messaging.sendConfiguredMessage(player, "adminMessages.listHeader", "helpHeaderMessage");
                     for (File f : files) {
                         if (f.getName().contains(".yml") && !f.getName().contains("Global.yml") && !f.getName().contains("Lists.yml")){
-                            Messaging.sendMessage(player, f.getName().replace(".yml", ""));
+                            Messaging.sendMessage(player, f.getName().replace(".yml", ""), "helpMessage");
                         }
                     }
                     return true;
@@ -247,14 +241,15 @@ public class Admin implements CommandExecutor, TabCompleter {
                 File file = new File(Bukkit.getServer().getPluginManager().getPlugin("Quests").getDataFolder(), args[1] + ".yml");
                 FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
                 Set<String> keys = fc.getKeys(false);
+                Messaging.sendConfiguredMessage(player, "adminMessages.listQuestHeader", "helpHeaderMessage");
                 for (String key : keys) {
-                    Messaging.sendMessage(player, "/gquest " + args[1] + " " + key + " <playerName>");
+                    Messaging.sendMessage(player, "/gquest " + args[1] + " " + key + " <playerName>", "helpMessage");
                 }
 
                 return true;
             }
 
-            Messaging.sendMessage(player, "Please use a valid quests command");
+            Messaging.sendConfiguredMessage(player, "adminMessages.invalidCommand");
         } else {
             Messaging.log("A player must run this command");
         }

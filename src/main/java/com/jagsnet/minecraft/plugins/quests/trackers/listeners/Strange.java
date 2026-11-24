@@ -40,13 +40,16 @@ public class Strange implements Listener {
             String entity = event.getRightClicked().getType().toString().toLowerCase();
             String typedEntity = Strings.getEntityType(event.getRightClicked());
 
+            // Ignore sheep
+            if (mainHandItem.equalsIgnoreCase("shears") && entity.equalsIgnoreCase("sheep")) return;
+
             if (mainHandItem.equalsIgnoreCase("bucket")) mainHandItem = "milk";
             if (mainHandItem.equals("milk") && player.getInventory().getItemInMainHand().getAmount() > 1) {
-                Messaging.sendMessage(player, "You can't use more than one bucket at a time. I know, a pain, sorry.");
+                Messaging.sendConfiguredMessage(player, "misc.noBucketStack");
                 return;
             }
             if (mainHandItem.equals("milk") && player.getInventory().getItemInMainHand().getItemMeta().hasLore()) {
-                Messaging.sendMessage(player, "You can't use special buckets for this task, sorry! :)");
+                Messaging.sendConfiguredMessage(player, "misc.noSpecialBucket");
                 return;
             }
             if (mainHandItem.equalsIgnoreCase("shears")) mainHandItem = "shear";

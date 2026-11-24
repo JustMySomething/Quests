@@ -3,7 +3,6 @@ package com.jagsnet.minecraft.plugins.quests.commands;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Completion;
-import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Configs;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +16,6 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 
@@ -29,16 +27,16 @@ public class Completer implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (!player.hasPermission("quests.admin")) {
-                Messaging.sendMessage(player, "You are missing quests admin permissions. Speak to Melon for more info");
+                Messaging.sendConfiguredMessage(player, "completerMessages.missingPermissions");
                 return true;
             }
         }
 
         if (args.length < 1) {
             if (sender instanceof Player) {
-                Messaging.sendMessage((Player) sender, "/cquest txt <playerName> <matchString1> <matchString2>");
-                Messaging.sendMessage((Player) sender, "/cquest num <playerName> <matchString1> <matchString2> <num>");
-                Messaging.sendMessage((Player) sender, "/cquest unlock <playerName> <matchString1> <matchString2>");
+                Player player = (Player) sender;
+                Messaging.sendConfiguredMessage(player, "completerMessages.cquestHelpHeader", "helpHeaderMessage");
+                Messaging.sendConfiguredMessage(player, "completerMessages.cquestHelp", "helpMessage");
             } else {
                 Messaging.log("Invalid quests command");
             }
@@ -73,7 +71,7 @@ public class Completer implements CommandExecutor, TabCompleter {
             player = Bukkit.getPlayer(args[1]);
             if (!player.isOnline()) {
                 if (sender instanceof Player) {
-                    Messaging.sendMessage((Player) sender, "Please specify a player that is currently online");
+                    Messaging.sendConfiguredMessage((Player) sender, "completerMessages.cquestOfflinePlayer");
                 } else {
                     Messaging.log("Please specify a player that is currently online");
                 }
@@ -87,7 +85,7 @@ public class Completer implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("txt")) {
             if (args.length < 4) {
                 if (sender instanceof Player) {
-                    Messaging.sendMessage((Player) sender, "Not enough arguments specified.");
+                    Messaging.sendConfiguredMessage((Player) sender, "completerMessages.cquestMissingArgs");
                 } else {
                     Messaging.log("Not enough arguments specified.");
                 }
@@ -129,7 +127,7 @@ public class Completer implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("num")) {
             if (args.length < 4) {
                 if (sender instanceof Player) {
-                    Messaging.sendMessage((Player) sender, "Not enough arguments specified.");
+                    Messaging.sendConfiguredMessage((Player) sender, "completerMessages.cquestMissingArgs");
                 } else {
                     Messaging.log("Not enough arguments specified.");
                 }
@@ -175,7 +173,7 @@ public class Completer implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("unlock")) {
             if (args.length < 4) {
                 if (sender instanceof Player) {
-                    Messaging.sendMessage((Player) sender, "Not enough arguments specified.");
+                    Messaging.sendConfiguredMessage((Player) sender, "completerMessages.cquestMissingArgs");
                 } else {
                     Messaging.log("Not enough arguments specified.");
                 }
@@ -212,7 +210,7 @@ public class Completer implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("trade")) {
             if (args.length < 4) {
                 if (sender instanceof Player) {
-                    Messaging.sendMessage((Player) sender, "Not enough arguments specified.");
+                    Messaging.sendConfiguredMessage((Player) sender, "completerMessages.cquestMissingArgs");
                 } else {
                     Messaging.log("Not enough arguments specified.");
                 }
@@ -243,7 +241,7 @@ public class Completer implements CommandExecutor, TabCompleter {
         }
 
         if (sender instanceof Player) {
-            Messaging.sendMessage((Player) sender, "Please use a valid quests command");
+            Messaging.sendConfiguredMessage((Player) sender, "completerMessages.invalidCommand");
         }
         return true;
     }

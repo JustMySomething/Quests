@@ -24,6 +24,9 @@ public class MobKills implements Listener {
                 
                 String entity = event.getEntity().getType().toString().replace("_", " ").toLowerCase();
                 String typedEntity = Strings.getEntityType(event.getEntity());
+                String weapon = player.getInventory().getItemInMainHand().getType().toString().replace("_", " ").toLowerCase();
+                if (weapon.equals("air")) {weapon = "fist";}
+
                 Boolean name = false;
                 if (event.getEntity().getCustomName() != null && event.getEntity().isCustomNameVisible()) {
                     entity = ChatColor.stripColor(event.getEntity().getCustomName()).toLowerCase();
@@ -60,7 +63,10 @@ public class MobKills implements Listener {
                                 &&
                                 (
                                     (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 4) ||
-                                    (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 4)
+                                    (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 4) ||
+                                    // Weapon specific kills
+                                    (line.contains("with a") && line.contains(" " + weapon) && line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + weapon.split(" ", 0).length + 6) ||
+                                    (line.contains("with a") && line.contains(" " + weapon) && line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + weapon.split(" ", 0).length + 6)
                                 )
                                 &&
                                 line.contains("kill")
@@ -76,7 +82,10 @@ public class MobKills implements Listener {
                         if (
                             (
                                 (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
-                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 3)
+                                (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 3) ||
+                                // Weapon specific kills
+                                (line.contains("with a") && line.contains(" " + weapon) && line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + weapon.split(" ", 0).length + 5) ||
+                                (line.contains("with a") && line.contains(" " + weapon) && line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + weapon.split(" ", 0).length + 5)
                             )
                             &&
                             line.contains("kill")

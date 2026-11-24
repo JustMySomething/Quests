@@ -48,13 +48,13 @@ public class Crafting implements Listener {
                     ) {
 
                         if (event.isShiftClick()){
-                            Messaging.sendMessage(player, "You cannot shift click craft while using a quest. Sorry.");
+                            Messaging.sendConfiguredMessage(player, "misc.noShiftCraft");
                             event.setCancelled(true);
                             return;
                         }
 
                         if (event.getClick() == ClickType.NUMBER_KEY){
-                            Messaging.sendMessage(player, "You cannot use number keys to craft while using a quest. Sorry.");
+                            Messaging.sendConfiguredMessage(player, "misc.noNumCraft");
                             event.setCancelled(true);
                             return;
                         }

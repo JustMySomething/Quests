@@ -69,6 +69,9 @@ public class Configs {
     // ----------------- Config file functions for global --------------------
     private static File global;
     private static FileConfiguration customGlobal;
+    // ----------------- Config file functions for messaging --------------------
+    private static File messaging;
+    private static FileConfiguration customMessaging;
 
     // ------------- Config file functions -----------------------------
     public static void setup(String configName){
@@ -167,6 +170,41 @@ public class Configs {
     public static void saveGlobal(){
         try{
             customGlobal.save(global);
+        }catch (IOException e){
+            Messaging.log("Couldn't save file");
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------
+    // For Messaging.yml
+    public static void setupMessagingConfig(){
+        messaging = new File(Bukkit.getServer().getPluginManager().getPlugin("Quests").getDataFolder(),"Messaging.yml");
+        if (!messaging.exists()){
+            try{
+                messaging.createNewFile();
+            }catch (IOException e){
+            }
+        }
+        customMessaging = YamlConfiguration.loadConfiguration(messaging);
+        try{
+            customMessaging.save(messaging);
+        }catch (IOException e){
+            Messaging.log("Couldn't save file");
+        }
+    }
+
+    public static FileConfiguration getMessagingConfig(){
+        return customMessaging;
+    }
+
+    public static void loadMessagingConfig(){
+        messaging = new File(Bukkit.getServer().getPluginManager().getPlugin("Quests").getDataFolder(), "Messaging.yml");
+        customMessaging = YamlConfiguration.loadConfiguration(messaging);
+    }
+
+    public static void saveMessagingConfig(){
+        try{
+            customMessaging.save(messaging);
         }catch (IOException e){
             Messaging.log("Couldn't save file");
         }

@@ -1,5 +1,6 @@
 package com.jagsnet.minecraft.plugins.quests.trackers.listeners;
 
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Completion;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
@@ -9,7 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.meta.PotionMeta;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Eating implements Listener {
@@ -23,6 +26,12 @@ public class Eating implements Listener {
                 String entity = event.getItem().getType().toString().replace("_", " ").toLowerCase();
                 ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
 
+                String potionName = "whatthefuckmelon";
+                if (event.getItem().getItemMeta() instanceof PotionMeta) {
+                    PotionMeta potionMeta = (PotionMeta) event.getItem().getItemMeta();
+                    potionName = potionMeta.getBasePotionType().name().replace("_", " ").toLowerCase();
+                }
+
                 String itemName = "whatthefuckmelon";
                 if (event.getItem().getItemMeta().hasDisplayName()) {
                     itemName = ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName()).replace("_", " ").toLowerCase();
@@ -33,7 +42,9 @@ public class Eating implements Listener {
                     if (
                             (
                                 (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
-                                (line.contains(" " + itemName) && line.split(" ", 0).length == itemName.split(" ", 0).length + 3)
+                                (line.contains(" " + itemName) && line.split(" ", 0).length == itemName.split(" ", 0).length + 3) ||
+                                (line.contains(" potion of " + potionName) && line.split(" ", 0).length == potionName.split(" ", 0).length + 5) ||
+                                (line.contains(" potions of " + potionName) && line.split(" ", 0).length == potionName.split(" ", 0).length + 5)
                             )
                             &&
                             (line.contains("eat") || line.contains("drink"))) {

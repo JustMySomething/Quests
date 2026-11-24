@@ -1,0 +1,238 @@
+# Main configuration options
+main:
+    pluginName: 'QUESTS'
+    messagePrefix: '<dark_gray>[</dark_gray> <bold><#82F5E6><pluginName></#82F5E6></bold> <dark_gray>]</dark_gray>'
+    messageColour: '<#34D8AD><message></#34D8AD>'
+    commandColour: '<#34D8AD><input1></#34D8AD>'
+    helpColour: '<gray><message></gray>'
+    standardMessage: '<messagePrefix> <messageColour>'
+    helpMessage: '<commandColour> <dark_gray>-</dark_gray> <helpColour>'
+    helpHeaderMessage: '<messagePrefix> <messageColour>'
+    
+# Messages for the /aquest command
+adminMessages:
+    # Sent when a user incorrectly types a /aquest command
+    invalidCommand: 'Please use a valid /aquest command. User /aquest without any arguments for hints.'
+    # Sent when a user does not have permission for /aquest
+    missingPermissions: 'Missing <pluginName> admin permissions.'
+    # Error message for not holding a valid scroll
+    invalidScroll: "Invalid quest scroll. Rerun when holding a proper quest."
+    # The help text sent when a user types /aquest
+    aquestHelpHeader: 'Admin <pluginName> Commands'
+    aquestHelp:
+    - prefix: '/aquest rewardList'
+      message: 'Lists the rewards of the quest you are holding.'
+    - prefix: '/aquest expiry <expiryInMillis>'
+      message: 'Adds the amount of milliseconds specified onto a quests expiry.'
+    - prefix: '/aquest claim'
+      message: 'Allows you to forcibly claim a quests rewards even if its incomplete.'
+    - prefix: '/aquest who'
+      message: 'Provides the UUID of the person who owns the quest.'
+    - prefix: '/aquest setWho <UUID>'
+      message: 'Allows you to change the owner of a quest.'
+    - prefix: '/aquest reloadList'
+      message: 'Reloads the list file. No longer required.'
+    - prefix: '/aquest version'
+      message: 'Provides a quest version and link to the github.'
+    - prefix: '/aquest auto'
+      message: 'Checks global autocomplete status.'
+    - prefix: '/aquest auto [true | false]'
+      message: 'Globally changes whether quest autocomplete can work.'
+    - prefix: '/aquest list'
+      message: 'Lists all quest config files available.'
+    - prefix: '/aquest list <fileName>'
+      message: 'Lists the quests within a config.'
+    
+    # Text for /aquest rewardList
+    # Header for rewards list. <input1> is the number of rewards
+    rewardHeader: '<input1> Quest Rewards:'
+    # Error message if no rewards set on scroll
+    rewardMissing: 'No rewards set on held scroll.'
+    
+    # Text for /aquest expiry <expiryInMillis>
+    # Error for not specifying <expiryInMillis>
+    expiryNoMilli: 'Insufficient arguments. Please enter the command like /aquest expiry <timeInMilliseconds>'
+    # Error for if milliseconds value is not a number
+    expiryInvalidMilli: 'Please enter a valid time in milliseconds.'
+    # Text sent when milliseconds set. <input1> is the time in milliseconds
+    expirySet: 'Expiry set for <input1> milliseconds from now.'
+    
+    # Text for /aquest who
+    # Message sent when anyone can use the quest scroll
+    whoAnyone: 'Anyone can use this quest scroll.'
+    
+    # Text for /aquest setWho <UUID>
+    # Error sent when not specifying a UUID
+    setWhoNoUUID: 'Please specify a UUID like /aquest setwho 1234-5678-etc.'
+    
+    # Text for /aquest reloadlist
+    # Reload complete message
+    reloadComplete: 'Quest List reload complete.'
+    
+    # Text for /aquest auto
+    # Autocomplete status message. <input1> is the status
+    autoStatus: 'Quests Autcomplete Status: <input1>'
+
+    # Text for /aquest list
+    # File list header
+    listHeader: 'Available Quest Files:'
+    # Quest list header
+    listQuestHeader: 'Available Quests:'
+
+# Messages for the /cquest command
+completerMessages:
+    # Sent when a user incorrectly types a /cquest command
+    invalidCommand: 'Please use a valid /cquest command. Use /cquest without any arguments for hints.'
+    # Sent when a user does not have permission for /cquest
+    missingPermissions: 'Missing <pluginName> admin permissions.'
+    # Error message for not holding a valid scroll
+    invalidScroll: "Invalid quest scroll. Rerun when holding a proper quest."
+    # The help text sent when a user types /cquest
+    cquestHelpHeader: 'Quest Completer Commands:'
+    cquestHelp:
+    - prefix: '/cquest txt <playerName> <matchString1> <matchString2>'
+      message: 'Allows completion of a incomplete/complete style quest objective.'
+    - prefix: '/cquest num <playerName> <matchString1> <matchString2> <num>'
+      message: 'Adds the number specified to the count of a number based objective.'
+    - prefix: '/cquest unlock <playerName> <matchString1> <matchString2>'
+      message: 'Unlocks locked objectives.'
+    # Sent when not enough args are specified in the command.
+    cquestMissingArgs: 'Not enough arguments specified. Use /cquest without any arguments for hints.'
+    # Sent when player is not online
+    cquestOfflinePlayer: 'Please specify a player that is currently online'
+
+
+# Messages for the /gquest command
+generatorMessages:
+    # Sent when a user incorrectly types a /gquest command
+    invalidCommand: 'Please use a valid /gquest command. Use /gquest without any arguments for hints.'
+    # Sent when a user does not have permission for /gquest
+    missingPermissions: 'Missing <pluginName> admin permissions.'
+    # Error message for not holding a valid scroll
+    invalidScroll: "Invalid quest scroll. Rerun when holding a proper quest."
+    # The help text sent when a user types /cquest
+    gquestHelpHeader: 'Quest Generator Commands:'
+    gquestHelp:
+    - prefix: '/gquest <fileName> <scrollName> <userName> [force | verbose]'
+      message: 'Allows you to generate a quest for a player.'
+    # Sent when not enough args are specified in the command.
+    missingArgs: 'Not enough arguments specified. Use /gquest without any arguments for hints.'
+    # Sent when player is not online
+    offlinePlayer: 'Please specify a player that is currently online'
+    # Admin feedback sent when a player has already collected the scroll. <input1> is the cooldown.
+    alreadyCollectedAdmin: 'Player has already gotten one of these quests. Use [/gquest config quest playerName force] to give them another.'
+    alreadyCollectedAdminVerbose: '"You have already collected this quest. It has a <input1> cooldown. Please wait until this is up.'
+    # Sent when quest objectives are misconfigured
+    noLines: 'No objectives specified, or objectives misconfigured.'
+    # Sent when no reward is set for a scroll
+    noReward: 'No rewards specified, or reward is misconfigured.' 
+    # Sent when no name is set for a scroll
+    noName: 'No name specified, or name is misconfigured.' 
+    # Sent when a player does not have space in their inventory
+    noSpace: 'Please clear room in your inventory before trying to collect a quest scroll'
+
+# Messages for the /quest command
+mainMessages:
+    # Sent when a user incorrectly types a /quest command
+    invalidCommand: 'Please use a valid /quest command. Use /quest help for hints.'
+    # Error message for not holding a valid scroll
+    invalidScroll: "Invalid quest scroll. Rerun when holding a proper quest in your main hand."
+    # The help text sent when a user types /quest help
+    questHelpHeader: 'Quest Commands:'
+    questHelp:
+    - prefix: '/quest help'
+      message: 'Lists specific help for the Quest you are holding if available.'
+    - prefix: '/quest claim'
+      message: 'Claims the rewards on a completed Quest.'
+    - prefix: '/quest display [full | compact | off]'
+      message: 'Toggles the quest display mode.'
+    - prefix: '/quest expiry'
+      message: 'Checks when a quest expires.'
+    - prefix: '/quest list'
+      message: 'Lists quests available to collect.'
+    - prefix: '/quest secret <code>'
+      message: 'Allows you to unlock secrets set on a quest if there are any.'
+    - prefix: '/quest path <path>'
+      message: 'Allows you to pick a Quest path if one is available.'
+    - prefix: 'Reminder'
+      message: 'Always hold your scroll in your offhand when completing objectives, and mainhand when running commands.'
+    # Sent when not enough args are specified in the command.
+    missingArgs: 'Not enough arguments specified. Use /quest help for hints.'
+    # The header used for the top of quest specific help
+    questSpecificHelp: 'Quest Specific Help:'
+    # Sent when a quest is expired
+    questExpired: 'This Quest has expired. It can no longer be claimed.'
+    # Sent when expiry is checked but the quest does not expire
+    questNoExpire: 'This quest does not expire.'
+    # Sent when a player checks a valid expiry on a quest. <input1> is the time
+    questExpiry: 'This quest expires in <input1>.'
+    # Sent in the rare case that someone has a stack of 2 or more of the same quest and they try to claim them.
+    questDouble: 'You may only claim one quest scroll at a time.'
+    # Sent when attempting to claim an incomplete scroll
+    questIncomplete: 'You have not completed this quest yet'
+
+    # Messages for /quest secret <code>
+    # Sent when player does not provide a code
+    noCode: 'You must provide a code to try.'
+    # Sent when a player attempts to guess while its still on cooldown. <input1> is the time
+    codeCooldown: 'You cannot guess this secret code again for another <input1>.'
+    # Sent when someone attempts to guess a code they've already guessed correctly.
+    codeAlreadyCracked: 'You have already correctly guessed the secret on this scroll.'
+    # Sent when there is no secret code set on the quest
+    noSecret: 'This quest scroll does not have a secret set.'
+    # Sent when the code guessed was incorrect. <input1> is the time
+    codeIncorrect: 'The provided secret code was wrong, try again in <input1>.'
+    # Sent when someone guesses the code correctly
+    codeCorrect: 'You guessed the code correctly!'
+    # Sent when someone does not have enough inventory space to claim the secret rewards
+    codeSpace: 'Clear some inventory space before guessing correctly again.'
+
+    # Messages for /quest path <path>
+    # Sent when someone doesn't specify a valid path
+    pathInvalid: 'Specify a valid path like /quest path 1'
+    # Sent when a quest looks like it has a path, but it isn't configured correctly
+    pathNotConfigured: 'Er, this quest isnt real, strange.'
+
+    # Messages for /quest display
+    # Sent when set in compact mode
+    displayCompact: 'Showing quest objectives in compact mode.'
+    # Sent when set in full mode
+    displayFull: 'Showing quest objectives in full mode.'
+    # Sent when turning off quest display
+    displayOff: 'Hiding quest objectives.'
+    # Sent when specifying an incorrect display mode
+    displayIncorrect: 'Incorrect mode specified, possible values are compact or full.'
+
+# Messages sent when a player attempts to claim a scroll
+claimingMessages:
+    # Sent when a player attempts to claim a scroll but does not have enough inventory space.
+    clearInventory: 'Clear some inventory space before tyring to claim your reward.'
+    # Sent when a player attempts to claim a quest but has already done so. <input1> is the cooldown
+    alreadyCompleted: 'You have already completed this quest. It has a <input1> cooldown. Please wait until this is up.'
+    # Sent in the freak scenario where they manage to claim a quest with no rewards.
+    noReward: 'Thats strange, there are no rewards for this quest scroll.'
+
+misc:
+    # Sent when someone manages to have a stack of 2+ scrolls and attempts anything with it
+    questDouble: 'You may only use one quest scroll at a time.'
+    # Sent when attempting to use a quest that does not belong to you
+    questWrongOwner: 'You may only use this scroll if it was assigned to you.'
+    # Sent when attempting to shift click craft
+    noShiftCraft: 'You cannot shift click craft while using a quest. Sorry.'
+    # Sent when attempting to number key craft
+    noNumCraft: 'You cannot use number keys to craft while using a quest. Sorry.'
+    # Sent when attempting to use silk touch while mining
+    noSilkTouch: 'You cannot use silk touch items while completing quests'
+    # Sent when attempting to use a bucket stack
+    noBucketStack: 'You cant use more than one bucket at a time. I know, a pain, sorry.'
+    # Sent when attempting to use a special bucket
+    noSpecialBucket: 'You cant use special buckets for this task, sorry! :)'
+
+
+
+
+
+
+
+
+

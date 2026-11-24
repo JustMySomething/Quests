@@ -82,6 +82,10 @@ public class Strings {
                 Axolotl axolotl = (Axolotl) entity;
                 entityString = axolotl.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
                 break;
+            case "MUSHROOMCOW":
+                MushroomCow mushroomCow = (MushroomCow) entity;
+                entityString = mushroomCow.getVariant().toString().replace("_", " ").toLowerCase() + " " + entityString;
+                break;
             case "SLIME":
             case "MAGMA_CUBE":
                 Slime slime = (Slime) entity;
@@ -108,6 +112,6 @@ public class Strings {
     }
 
     public static String questVersion(){
-        return "1.11";
+        return "v1.12";
     }
 }

@@ -1,17 +1,19 @@
 package com.jagsnet.minecraft.plugins.quests.trackers.scheduledTasks;
 
 import com.jagsnet.minecraft.plugins.quests.Quests;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Configs;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Perms;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import net.kyori.adventure.text.Component;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.*;
@@ -55,17 +57,10 @@ public class ScoreboardDisplay {
                             .useUnusualXRepeatedCharacterHexFormat()
                             .build();
 
-                    TextComponent empty = Component.text()
-                            .content(" ")
-                            .decorate(TextDecoration.BOLD)
-                            .build();
-                    String emptyText = serializer.serialize(empty);
-                    Score lineBreak = objective.getScore(emptyText);
-                    lineBreak.setScore(101);
-                    lineBreak.numberFormat(NumberFormat.blank());
+
 
                     ArrayList<Component> lore = (ArrayList<Component>) p.getInventory().getItemInOffHand().getItemMeta().lore();
-                    int linePriority = 100;
+                    int linePriority = 16;
 
                     String mode = "compact";
 
@@ -73,8 +68,41 @@ public class ScoreboardDisplay {
                         mode = "full";
                     }
 
+                    String expiryString = "";
+                    NamespacedKey key = new NamespacedKey(Quests.getInstance(), "rewardLocation");
+                    ItemStack mainHandItem = p.getInventory().getItemInOffHand();
+                    String location = mainHandItem.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+                    Configs.load(location.split("_")[0]);
+                    if (Configs.get().getString(location.split("_")[1] + ".expiry") != null) {
+                        Long expiry = Long.valueOf(Configs.get().getString(location.split("_")[1] + ".expiry"));
+                        key = new NamespacedKey(Quests.getInstance(), "expiry");
+                        if (mainHandItem.getPersistentDataContainer().has(key, PersistentDataType.LONG)) {
+                            expiry += mainHandItem.getPersistentDataContainer().get(key, PersistentDataType.LONG);
+                            Long current = System.currentTimeMillis();
+                            if (!(current > expiry)) {
+                                expiryString = "§7Quest Expires in " + Messaging.roughTime(expiry - current);
+                                TextComponent expiryComponent = Component.text().content(expiryString).build();
+                                String expiryLine = serializer.serialize(expiryComponent);
+                                Score expiryScore = objective.getScore(expiryLine);
+                                expiryScore.setScore(0);
+                                expiryScore.numberFormat(NumberFormat.blank());
+                            }
+                        }
+                    }
+
+//                    if (!expiryString.equals("")) {
+//                        TextComponent empty = Component.text()
+//                                .content(" ")
+//                                .decorate(TextDecoration.BOLD)
+//                                .build();
+//                        String emptyText = serializer.serialize(empty);
+//                        Score lineBreak = objective.getScore(emptyText);
+//                        lineBreak.setScore(100);
+//                        lineBreak.numberFormat(NumberFormat.blank());
+//                    }
+
                     if (mode == "compact") {
-                        for (int i = 0; i < lore.size(); i++) {
+                        for (int i = 0; i < lore.size() && i < 13; i++) {
                             String formattedLine = serializer.serialize(lore.get(i));
                             if (!formattedLine.contains(": ")) { continue; }
                             Team team = board.registerNewTeam(p.getName() + "_line_" + i);
@@ -90,13 +118,13 @@ public class ScoreboardDisplay {
                         Team team = board.registerNewTeam(p.getName() + "_line_" + 50);
                         String entryIdentifier = "§" + Integer.toHexString(15) + "§r";
                         team.addEntry(entryIdentifier);
-                        team.setPrefix("Use /quest help for quest info");
+                        team.setPrefix("§7Use /quest help for quest info");
 
                         Score line = objective.getScore(entryIdentifier);
-                        line.setScore(linePriority);
+                        line.setScore(1);
                         line.numberFormat(NumberFormat.blank());
                     } else {
-                        for (int i = 0; i < lore.size(); i++) {
+                        for (int i = 0; i < lore.size() && i < 13; i++) {
                             Team team = board.registerNewTeam(p.getName() + "_line_" + i);
                             String entryIdentifier = "§" + Integer.toHexString(i) + "§r";
                             team.addEntry(entryIdentifier);

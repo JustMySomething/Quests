@@ -3,7 +3,7 @@ version: ${project.version}
 main: com.jagsnet.minecraft.plugins.quests.Quests
 api-version: 1.21.11
 authors: [ Melon ]
-description: Quests for AC
+description: Quests for Minecraft!
 depend: [WorldGuard, LuckPerms]
 commands:
   quest:

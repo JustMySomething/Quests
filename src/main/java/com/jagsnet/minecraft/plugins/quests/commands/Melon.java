@@ -25,8 +25,6 @@ public class Melon implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            Configs.loadQuestConfigNames();
-
             boolean ddeve = false;
 
             try {
@@ -34,7 +32,7 @@ public class Melon implements CommandExecutor, TabCompleter {
             } catch (Exception e) {}
 
             Messaging.setDdeve(ddeve);
-            Messaging.sendMessage(player, "Addeve mode set to " + String.valueOf(Messaging.ddeve));
+            Messaging.sendMessage(player, "Addeve mode set to <input1>", "standardMessage", String.valueOf(Messaging.ddeve));
         }
         return true;
     }

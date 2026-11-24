@@ -480,12 +480,20 @@ Deal 100 Damage To Zombies: 0
 ```
 
 ### Eating
+All eating and drinking objectives can start with either `Eat` or `Drink`  
 **Example:**
 ```
 Eat x <itemType>: 0
+Drink x <itemType>: 0
 Eat 10 Apples: 0
 Eat x <itemName>: 0
+Drink x <itemName>: 0
 Eat 10 Red Bulls: 0
+Drink 10 Red Bulls: 0
+Drink X Apples: 0
+Drink X Potions Of <PotionType>: 0
+Drink X Potions Of Strong Strength: 0
+Drink X Potions Of Long Regeneration: 0
 ```
 
 ### Enchanting
@@ -523,6 +531,10 @@ Kill 10 Chickens: 0
 Kill 10 Wild Chickens: 0
 Kill 10 Wild Small Slimes: 0
 Kill 10 Blue Axolotls: 0
+Kill x <Entity type> With A <ItemType>: 0
+Kill x Parrots With A Cookie: 0
+Kill x Chickens With A Fist: 0
+Kill x Zombies With A Netherite Sword: 0
 Kill <EntityName>: Incomplete
 Kill Berty: Incomplete
 ```
@@ -711,6 +723,24 @@ Compost x <compostableItem>: 0
 Compost x Oak Saplings: 0
 ```
 
+### Repairing
+**Example:**
+```
+Repair x <RepairableItem>: 0
+Repair x Netherite Swords: 0
+```
+
+### Sleep
+**Example:**
+```
+Sleep X Times In Beds: 0
+Sleep X Times In <BedType>: 0
+Sleep X Times In Purple Beds: 0
+Deepsleep X Times In Beds: 0
+Deepsleep X Times In <BedType>: 0
+Deepsleep X Times In Purple Beds: 0
+```
+
 ---
 
 # Global Configurations
@@ -845,6 +875,7 @@ plugins
 ├───Quests
 │   ├───Global.yml
 │   ├───Lists.yml
+│   ├───Messaging.yml
 │   ├───questName1.yml
 │   ├───questName2.yml
 │   └───questNameX.yml
@@ -853,6 +884,13 @@ plugins
 ---
 
 # Changelog
+### 1.12
+- Added Messaging.yml file to manage message formatting. Example default of this can be found in the examples folder
+- Added `Kill X With A <Item>` objectives
+- Added `Repair X <Item>`
+- Added `Drink X Potions Of <PotionType>`
+- Added `Sleep X Times In <BedType>`
+- Added the quests expiry to the scoreboard display if a quest has an expiry
 ### 1.11
 - Added tab complete for all commands
 - Removed /wiki and /daddeve

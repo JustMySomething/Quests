@@ -1,5 +1,6 @@
 package com.jagsnet.minecraft.plugins.quests.trackers.listeners;
 
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Completion;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
@@ -19,20 +20,9 @@ public class Shearing implements Listener {
         Player player = event.getPlayer();
         if (Scroll.isScrollOff(player)) {
 
-            String entity = event.getEntity().getType().name().replace("_", " ");
+            String entity = event.getEntity().getType().name().replace("_", " ").toLowerCase();
+            String typedEntity = Strings.getEntityType(event.getEntity());
             ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
-
-            if (event.getEntity() instanceof Sheep) {
-                Sheep eventEnt = (Sheep) event.getEntity();
-                entity = eventEnt.getColor().name().toLowerCase().replace("_", " ") + " " + entity;
-            }
-
-            if (event.getEntity() instanceof MushroomCow) {
-                MushroomCow eventEnt = (MushroomCow) event.getEntity();
-                entity = eventEnt.getVariant().name() + " mooshroom";
-            }
-
-            entity = entity.toLowerCase().replace("_", " ");
 
             CreatureSpawnEvent.SpawnReason spawnReason = event.getEntity().getEntitySpawnReason();
 
@@ -40,10 +30,16 @@ public class Shearing implements Listener {
                 String line = Strings.cleanLore(lore.get(i), true, false);
 
                 // wild mobs
-                if (line.contains(" wild ") &&
-                        (line.contains(" " + entity) &&
-                        line.split(" ", 0).length == entity.split(" ", 0).length + 4) &&
-                        line.contains("shear")) {
+                if (
+                        line.contains(" wild ")
+                        &&
+                        (
+                            (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 4) ||
+                            (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 4)
+                        )
+                        &&
+                        line.contains("shear")
+                ) {
                     if (Completion.isWild(spawnReason)) {
                         if (Completion.updateNumLine(lore, player, 1, i)) {
                             return;
@@ -52,9 +48,14 @@ public class Shearing implements Listener {
                 }
 
                 // All mobs
-                if ((line.contains(" " + entity) &&
-                        line.split(" ", 0).length == entity.split(" ", 0).length + 3) &&
-                        line.contains("shear")) {
+                if (
+                        (
+                            (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 3) ||
+                            (line.contains(" " + typedEntity) && line.split(" ", 0).length == typedEntity.split(" ", 0).length + 3)
+                        )
+                        &&
+                        line.contains("shear")
+                ) {
                     if (Completion.updateNumLine(lore, player, 1, i)) {
                         return;
                     }

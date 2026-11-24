@@ -52,7 +52,7 @@ public class Mining implements Listener {
                             line.contains("break") || line.contains("pick"))) {
                         if (player.getInventory().getItemInMainHand().getItemMeta() != null) {
                             if (player.getInventory().getItemInMainHand().getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
-                                Messaging.sendMessage(player, "You cannot use silk touch items while completing quests");
+                                Messaging.sendConfiguredMessage(player, "misc.noSilkTouch");
                                 return;
                             }
                         }

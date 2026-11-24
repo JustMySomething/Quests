@@ -1,0 +1,52 @@
+package com.jagsnet.minecraft.plugins.quests.trackers.listeners;
+
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Strings;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Completion;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Scroll;
+import io.papermc.paper.event.entity.EntityCompostItemEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+
+import java.util.ArrayList;
+
+public class Sleeping implements Listener {
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSleep(PlayerBedEnterEvent event) {
+        if (event.isCancelled()) {return;}
+        if (event.enterAction().problem() != null)  {return;}
+
+        Player player = event.getPlayer();
+        if (Scroll.isScrollOff(player)) {
+
+            String entity = event.getBed().getType().toString().replace("_", " ").toLowerCase();
+            ArrayList<String> lore = (ArrayList<String>) player.getInventory().getItemInOffHand().getItemMeta().getLore();
+
+            for (int i = 0; i < lore.size(); i++) {
+                String line = Strings.cleanLore(lore.get(i), false, true);
+
+                if (
+                        (
+                            (line.contains(" " + entity) && line.split(" ", 0).length == entity.split(" ", 0).length + 5) ||
+                            (line.contains(" bed") && line.split(" ", 0).length == 6)
+                        )
+                                &&
+                                line.contains("sleep")
+                                &&
+                                !line.contains("deepsleep")
+                ) {
+                    if (Completion.updateNumLine(lore, player, 1, i)) {
+                        return;
+                    }
+                }
+            }
+        }
+
+    }
+}
+

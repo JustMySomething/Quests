@@ -3,6 +3,7 @@ package com.jagsnet.minecraft.plugins.quests;
 import com.google.common.collect.ImmutableBiMap;
 import com.jagsnet.minecraft.plugins.quests.commands.*;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.bedrock.MoveToOffhand;
+import com.jagsnet.minecraft.plugins.quests.otherStuff.messages.Messaging;
 import com.jagsnet.minecraft.plugins.quests.otherStuff.utils.Configs;
 import com.jagsnet.minecraft.plugins.quests.trackers.listeners.*;
 import com.jagsnet.minecraft.plugins.quests.trackers.scheduledTasks.*;
@@ -47,6 +48,9 @@ public final class Quests extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Composting(), this);
         getServer().getPluginManager().registerEvents(new ShearingBlocks(), this);
         getServer().getPluginManager().registerEvents(new HarvestBlock(), this);
+        getServer().getPluginManager().registerEvents(new Sleeping(), this);
+        getServer().getPluginManager().registerEvents(new DeepSleeping(), this);
+        getServer().getPluginManager().registerEvents(new Repairing(), this);
 
         // Schedule check for player movement
         BukkitScheduler scheduler = getServer().getScheduler();
@@ -122,6 +126,8 @@ public final class Quests extends JavaPlugin {
 
         Configs.setupLists();
         Configs.setupGlobal();
+        Configs.setupMessagingConfig();
+        Messaging.loadMessageFormattingStrings();
         setAuto();
     }
 
